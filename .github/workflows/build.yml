@@ -1,0 +1,37 @@
+name: Build and upload project.exe
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 0 * * 0'  # Runs every Sunday at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'  
+
+    - name: Install resources
+      run: ./installResources.ps1
+      shell: pwsh
+
+    - name: Build executable
+      run: |
+        pyinstaller --onefile project.py
+      shell: pwsh
+
+    - name: Upload executable
+      uses: actions/upload-artifact@v3
+      with:
+        name: program
+        path: dist/project.exe
