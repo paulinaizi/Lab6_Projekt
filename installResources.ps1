@@ -1,1 +1,1 @@
-pip install xmltodict
+pip install pyinstaller xmltodict
